@@ -305,18 +305,24 @@
     flex-direction: column;
   }
   .step {
+    border-top: 1px solid var(--line);
+    transition: background 0.3s;
+  }
+  .step:last-child { border-bottom: 1px solid var(--line); }
+  .step-header {
     display: grid;
     grid-template-columns: 140px 1fr 280px;
     gap: 48px;
     padding: 48px 0;
-    border-top: 1px solid var(--line);
     align-items: start;
+    cursor: pointer;
     transition: background 0.3s;
   }
-  .step:last-child { border-bottom: 1px solid var(--line); }
-  .step:hover { background: linear-gradient(90deg, transparent, var(--bg-elevated) 50%, transparent); }
+  .step-header:hover {
+    background: linear-gradient(90deg, transparent, var(--bg-elevated) 50%, transparent);
+  }
   @media (max-width: 880px) {
-    .step { grid-template-columns: 1fr; gap: 16px; padding: 32px 0; }
+    .step-header { grid-template-columns: 1fr; gap: 16px; padding: 32px 0; }
   }
   .step-num {
     font-family: var(--serif);
@@ -326,7 +332,9 @@
     line-height: 0.9;
     color: var(--text-dim);
     letter-spacing: -0.04em;
+    transition: color 0.3s;
   }
+  .step.open .step-num { color: var(--accent); }
   .step-content h3 {
     font-family: var(--serif);
     font-size: 32px;
@@ -335,7 +343,7 @@
     letter-spacing: -0.02em;
     margin-bottom: 16px;
   }
-  .step-content p {
+  .step-content > p {
     color: var(--text-muted);
     font-size: 15px;
     line-height: 1.7;
@@ -348,7 +356,7 @@
     text-align: right;
   }
   @media (max-width: 880px) {
-    .step-meta { align-items: flex-start; text-align: left; flex-direction: row; gap: 16px; }
+    .step-meta { align-items: flex-start; text-align: left; flex-direction: row; gap: 16px; flex-wrap: wrap; }
   }
   .step-meta .duration {
     font-family: var(--mono);
@@ -364,6 +372,151 @@
     padding: 4px 10px;
     border: 1px solid var(--line-strong);
     border-radius: 4px;
+  }
+  .step-toggle {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: var(--text-muted);
+    transition: all 0.3s;
+    flex-shrink: 0;
+  }
+  .step.open .step-toggle {
+    background: var(--accent);
+    color: #0a0e1a;
+    border-color: var(--accent);
+    transform: rotate(45deg);
+  }
+
+  /* Step body (expanded content) */
+  .step-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease, padding 0.3s ease;
+    padding-left: 188px;
+    padding-right: 0;
+  }
+  @media (max-width: 880px) {
+    .step-body { padding-left: 0; }
+  }
+  .step.open .step-body {
+    max-height: 2000px;
+    padding-bottom: 56px;
+  }
+  .step-body-inner {
+    max-width: 760px;
+    border-left: 2px solid var(--accent);
+    padding: 8px 0 8px 32px;
+  }
+  @media (max-width: 880px) {
+    .step-body-inner { padding-left: 20px; }
+  }
+  .step-body h4 {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 500;
+    margin: 24px 0 12px;
+    letter-spacing: -0.01em;
+  }
+  .step-body h4:first-child { margin-top: 0; }
+  .step-body p {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  .step-body ul {
+    list-style: none;
+    margin-bottom: 16px;
+  }
+  .step-body ul li {
+    position: relative;
+    padding-left: 24px;
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.8;
+    margin-bottom: 8px;
+  }
+  .step-body ul li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-family: var(--mono);
+  }
+  .step-body ul li strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+  .step-body code {
+    font-family: var(--mono);
+    font-size: 13px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+  .step-body pre {
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px 24px;
+    overflow-x: auto;
+    margin: 16px 0;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+  .step-body pre .comment { color: var(--text-dim); }
+  .step-body pre .keyword { color: var(--accent); }
+  .step-body pre .string { color: #ff9b6b; }
+  .step-body .callout {
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .step-body .callout strong {
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .prompt-example {
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 16px 0;
+  }
+  .prompt-example .prompt-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  .prompt-example .prompt-text {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--text);
   }
 
   /* ===== TOOLS ===== */
@@ -647,53 +800,211 @@
     </div>
 
     <div class="steps">
-      <div class="step">
-        <div class="step-num">01</div>
-        <div class="step-content">
-          <h3>웹크롤링의 기본 개념</h3>
-          <p>HTML 구조, CSS 셀렉터, robots.txt 같은 기본 용어부터 차근차근. 크롤링과 스크래핑의 차이, 합법적 수집의 경계까지 정확히 짚어드립니다.</p>
+
+      <!-- STEP 01 -->
+      <div class="step open" data-step="1">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <h3>웹크롤링의 기본 개념</h3>
+            <p>HTML 구조, CSS 셀렉터, robots.txt 같은 기본 용어부터 차근차근. 크롤링과 스크래핑의 차이, 합법적 수집의 경계까지 정확히 짚어드립니다.</p>
+          </div>
+          <div class="step-meta">
+            <div class="duration">5분 소요</div>
+            <div class="tag">Beginner</div>
+            <div class="step-toggle">+</div>
+          </div>
         </div>
-        <div class="step-meta">
-          <div class="duration">5분 소요</div>
-          <div class="tag">Beginner</div>
+        <div class="step-body">
+          <div class="step-body-inner">
+
+            <h4>크롤링 vs 스크래핑, 뭐가 다른가요?</h4>
+            <p><strong style="color:var(--text)">크롤링(Crawling)</strong>은 웹페이지를 자동으로 돌아다니며 링크를 따라 정보를 수집하는 것이고, <strong style="color:var(--text)">스크래핑(Scraping)</strong>은 특정 페이지에서 원하는 데이터만 골라 추출하는 것입니다. 실무에서는 둘을 합쳐 "웹크롤링"이라 부르는 경우가 많습니다.</p>
+
+            <h4>꼭 알아야 할 3가지 개념</h4>
+            <ul>
+              <li><strong>HTML 구조</strong> — 모든 웹페이지는 태그(tag)로 이루어진 문서. 크롤링은 이 태그 안의 텍스트를 추출하는 작업입니다.</li>
+              <li><strong>CSS 셀렉터</strong> — 원하는 요소를 콕 집어내는 주소. <code>.title</code>이면 클래스가 title인 요소, <code>#main</code>이면 id가 main인 요소.</li>
+              <li><strong>HTTP 요청</strong> — 브라우저가 서버에 "이 페이지 주세요"라고 묻는 과정. 우리는 이걸 코드로 흉내냅니다.</li>
+            </ul>
+
+            <h4>합법적 수집의 경계선</h4>
+            <p>모든 웹사이트가 크롤링을 허용하는 건 아닙니다. 사이트 주소 뒤에 <code>/robots.txt</code>를 붙여서 접속하면, 어떤 페이지를 자동 수집해도 되는지 명시되어 있어요.</p>
+
+            <div class="callout">
+              <strong>⚠ 꼭 지켜야 할 원칙</strong>
+              개인정보가 포함된 데이터는 수집하지 않기 / 서버에 과부하 주지 않기(요청 간 1~2초 간격) / 상업적 이용 전에는 이용약관 확인 / 로그인이 필요한 페이지는 신중하게.
+            </div>
+
+            <h4>크롤링이 보내는 신호 읽기</h4>
+            <p>웹페이지에서 마우스 오른쪽 클릭 → "검사(Inspect)"를 눌러보세요. 우리가 보는 페이지가 사실은 거대한 HTML 문서라는 사실이 보입니다. 이게 크롤링의 출발점이에요.</p>
+
+          </div>
         </div>
       </div>
 
-      <div class="step">
-        <div class="step-num">02</div>
-        <div class="step-content">
-          <h3>AI에게 정확하게 요청하기</h3>
-          <p>Claude나 ChatGPT에게 원하는 데이터를 어떻게 설명해야 정확한 코드를 받을 수 있을까요. 프롬프트 작성의 패턴과 실수를 피하는 방법.</p>
+      <!-- STEP 02 -->
+      <div class="step" data-step="2">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <h3>AI에게 정확하게 요청하기</h3>
+            <p>Claude나 ChatGPT에게 원하는 데이터를 어떻게 설명해야 정확한 코드를 받을 수 있을까요. 프롬프트 작성의 패턴과 실수를 피하는 방법.</p>
+          </div>
+          <div class="step-meta">
+            <div class="duration">8분 소요</div>
+            <div class="tag">Core</div>
+            <div class="step-toggle">+</div>
+          </div>
         </div>
-        <div class="step-meta">
-          <div class="duration">8분 소요</div>
-          <div class="tag">Core</div>
+        <div class="step-body">
+          <div class="step-body-inner">
+
+            <h4>좋은 프롬프트의 4가지 요소</h4>
+            <ul>
+              <li><strong>대상 URL</strong> — 어떤 사이트의 어떤 페이지를 수집할지</li>
+              <li><strong>원하는 데이터</strong> — 제목, 가격, 날짜 등 구체적인 필드명</li>
+              <li><strong>출력 형식</strong> — CSV, JSON, 엑셀 등</li>
+              <li><strong>제약 조건</strong> — 페이지 수, 속도, 에러 처리 방식</li>
+            </ul>
+
+            <h4>나쁜 예 vs 좋은 예</h4>
+
+            <div class="prompt-example">
+              <div class="prompt-label">❌ 모호한 요청</div>
+              <div class="prompt-text">"네이버에서 뉴스 좀 가져오는 코드 짜줘"</div>
+            </div>
+
+            <div class="prompt-example">
+              <div class="prompt-label">✓ 명확한 요청</div>
+              <div class="prompt-text">"네이버 뉴스 IT 섹션(news.naver.com/section/105)의 첫 페이지에서 제목, 언론사, 작성 시간을 추출하는 Python 코드를 BeautifulSoup으로 작성해줘. 결과는 CSV 파일로 저장하고, 요청 간 1초 대기시간을 넣어줘."</div>
+            </div>
+
+            <h4>막힐 때 효과적으로 질문하기</h4>
+            <p>코드가 작동하지 않는다면 에러 메시지를 그대로 복사해 AI에게 보여주세요. "안 돼요"보다 "이런 에러가 떴어요"가 백 배 정확한 답을 줍니다.</p>
+
+            <div class="callout">
+              <strong>★ Pro Tip</strong>
+              크롤링 대상 페이지의 HTML 일부를 복사해서 AI에게 함께 보여주세요. "이 HTML 구조에서 가격을 추출하려면?"이라고 물으면 정확한 CSS 셀렉터를 알려줍니다.
+            </div>
+
+          </div>
         </div>
       </div>
 
-      <div class="step">
-        <div class="step-num">03</div>
-        <div class="step-content">
-          <h3>Python으로 실제 실행하기</h3>
-          <p>BeautifulSoup, Selenium, Playwright의 차이와 선택 기준. 환경 설정부터 첫 실행까지, 막힐 때마다 AI에게 물어보는 법까지.</p>
+      <!-- STEP 03 -->
+      <div class="step" data-step="3">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <h3>Python으로 실제 실행하기</h3>
+            <p>BeautifulSoup, Selenium, Playwright의 차이와 선택 기준. 환경 설정부터 첫 실행까지, 막힐 때마다 AI에게 물어보는 법까지.</p>
+          </div>
+          <div class="step-meta">
+            <div class="duration">10분 소요</div>
+            <div class="tag">Hands-on</div>
+            <div class="step-toggle">+</div>
+          </div>
         </div>
-        <div class="step-meta">
-          <div class="duration">10분 소요</div>
-          <div class="tag">Hands-on</div>
+        <div class="step-body">
+          <div class="step-body-inner">
+
+            <h4>어떤 도구를 선택해야 할까?</h4>
+            <ul>
+              <li><strong>BeautifulSoup</strong> — 가장 가볍고 빠름. 정적 HTML 페이지(뉴스, 블로그)에 최적.</li>
+              <li><strong>Selenium</strong> — 진짜 브라우저를 띄워서 사용. 로그인이 필요하거나 클릭이 필요한 사이트.</li>
+              <li><strong>Playwright</strong> — Selenium보다 현대적이고 빠름. JavaScript로 동적 로딩되는 사이트(쇼핑몰, SNS).</li>
+            </ul>
+
+            <h4>환경 설정 (단 3줄)</h4>
+            <pre><span class="comment"># 터미널 또는 명령 프롬프트에서</span>
+<span class="keyword">pip install</span> requests beautifulsoup4 pandas
+
+<span class="comment"># 동적 페이지가 필요하면</span>
+<span class="keyword">pip install</span> playwright
+playwright install chromium</pre>
+
+            <h4>가장 기본적인 크롤러 예시</h4>
+            <pre><span class="keyword">import</span> requests
+<span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup
+
+url <span class="keyword">=</span> <span class="string">"https://news.ycombinator.com"</span>
+response <span class="keyword">=</span> requests.get(url)
+soup <span class="keyword">=</span> BeautifulSoup(response.text, <span class="string">"html.parser"</span>)
+
+<span class="comment"># 제목 추출</span>
+titles <span class="keyword">=</span> soup.select(<span class="string">".titleline > a"</span>)
+<span class="keyword">for</span> title <span class="keyword">in</span> titles:
+    print(title.text)</pre>
+
+            <h4>에러가 나면?</h4>
+            <p>에러 메시지를 그대로 복사해서 Claude에게 붙여넣고 "이 에러 어떻게 고쳐?"라고 물어보세요. 90%의 문제는 이 한 줄로 해결됩니다.</p>
+
+            <div class="callout">
+              <strong>★ Pro Tip</strong>
+              VS Code 같은 무료 에디터를 설치하면 실행과 디버깅이 훨씬 쉽습니다. Python 확장만 설치하면 바로 사용 가능해요.
+            </div>
+
+          </div>
         </div>
       </div>
 
-      <div class="step">
-        <div class="step-num">04</div>
-        <div class="step-content">
-          <h3>데이터 정제와 활용</h3>
-          <p>CSV, JSON으로 깔끔하게 저장하고 Pandas로 분석. 수집한 데이터를 AI에게 다시 던져 인사이트를 뽑아내는 워크플로우.</p>
+      <!-- STEP 04 -->
+      <div class="step" data-step="4">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">04</div>
+          <div class="step-content">
+            <h3>데이터 정제와 활용</h3>
+            <p>CSV, JSON으로 깔끔하게 저장하고 Pandas로 분석. 수집한 데이터를 AI에게 다시 던져 인사이트를 뽑아내는 워크플로우.</p>
+          </div>
+          <div class="step-meta">
+            <div class="duration">7분 소요</div>
+            <div class="tag">Advanced</div>
+            <div class="step-toggle">+</div>
+          </div>
         </div>
-        <div class="step-meta">
-          <div class="duration">7분 소요</div>
-          <div class="tag">Advanced</div>
+        <div class="step-body">
+          <div class="step-body-inner">
+
+            <h4>수집 → 정제 → 분석의 흐름</h4>
+            <p>크롤링은 시작일 뿐입니다. 진짜 가치는 모은 데이터를 가지고 무엇을 할 것인가에서 나옵니다. 일반적인 파이프라인은 이렇습니다.</p>
+            <ul>
+              <li><strong>1. 수집</strong> — 원본 데이터를 그대로 저장 (CSV 또는 JSON)</li>
+              <li><strong>2. 정제</strong> — 중복 제거, 공백 정리, 형식 통일 (Pandas)</li>
+              <li><strong>3. 분석</strong> — 패턴 찾기, 시각화, 또는 AI에 던져 요약 요청</li>
+              <li><strong>4. 자동화</strong> — 스케줄러로 매일/매시간 반복 실행</li>
+            </ul>
+
+            <h4>Pandas로 데이터 정제하기</h4>
+            <pre><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+df <span class="keyword">=</span> pd.read_csv(<span class="string">"news.csv"</span>)
+
+<span class="comment"># 중복 제거</span>
+df <span class="keyword">=</span> df.drop_duplicates(subset<span class="keyword">=</span><span class="string">"title"</span>)
+
+<span class="comment"># 공백 정리</span>
+df[<span class="string">"title"</span>] <span class="keyword">=</span> df[<span class="string">"title"</span>].str.strip()
+
+<span class="comment"># 특정 키워드만 필터링</span>
+ai_news <span class="keyword">=</span> df[df[<span class="string">"title"</span>].str.contains(<span class="string">"AI"</span>)]
+ai_news.to_csv(<span class="string">"ai_only.csv"</span>)</pre>
+
+            <h4>AI에게 분석 맡기기</h4>
+            <p>수집한 데이터를 다시 Claude에게 던지는 순간 마법이 시작됩니다. "이 뉴스 100건의 핵심 트렌드 3가지를 뽑아줘" 같은 요청만으로 분석이 끝납니다.</p>
+
+            <h4>매일 자동 실행하기</h4>
+            <p>Windows의 작업 스케줄러, Mac의 cron을 쓰면 매일 정해진 시간에 자동 실행. 더 간단하게는 GitHub Actions를 사용하면 무료로 클라우드에서 돌릴 수 있습니다.</p>
+
+            <div class="callout">
+              <strong>★ 최종 목표</strong>
+              "매일 아침 8시에 관심 키워드 뉴스 50건이 수집되고, AI가 핵심 5개로 요약해 내 이메일로 도착하는" 시스템. 여기까지 만들면 진짜 자동화 입문 완료입니다.
+            </div>
+
+          </div>
         </div>
       </div>
+
     </div>
   </div>
 </section>
@@ -812,6 +1123,21 @@
     </div>
   </div>
 </footer>
+
+<script>
+  function toggleStep(headerEl) {
+    const step = headerEl.parentElement;
+    const isOpen = step.classList.contains('open');
+
+    // Close all steps
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('open'));
+
+    // Open clicked one if it wasn't already open
+    if (!isOpen) {
+      step.classList.add('open');
+    }
+  }
+</script>
 
 </body>
 </html>
